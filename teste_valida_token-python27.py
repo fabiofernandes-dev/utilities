@@ -10,7 +10,11 @@ def verify_jwt_token(f):
         # Obter o token do cabeçalho de autorização
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            token = auth_header.split(" ")[1]  # Presume que o formato é "Bearer <token>"
+            parts = auth_header.split()
+            if len(parts) == 2 and parts[0] == 'Bearer':
+                token = parts[1]
+            else:
+                return jsonify({"message": "Invalid token format"}), 400
         else:
             return jsonify({"message": "Token is missing"}), 403
 
